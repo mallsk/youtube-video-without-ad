@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube-Play</title>
+    <style>
+      /* MagicMix Theme */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif; /* Modern, clean font */
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          #656669,
+          #110216
+        ); /* Magic gradient */
+        color: #f0f8ff; /* Light color for contrast */
+        min-height: 100vh;
+        padding: 20px;
+        transition: background 0.5s ease; /* Smooth transitions */
+      }
+      h1 {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+        padding-left: 10px;
+        padding-top: 5px;
+      }
+
+      /* Container with Magic Glow */
+      #videoContainer {
+        background-color: rgba(255, 255, 255, 0.15); /* Semi-transparent box */
+        border-radius: 20px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        padding: 30px;
+        width: 80%;
+        max-width: 900px;
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+
+      #videoContainer:hover {
+        transform: scale(1.05); /* Slight zoom on hover */
+      }
+
+      /* Styling the Input Field */
+      input[type="text"] {
+        width: 40%;
+        height: 50px;
+        padding-left: 10px;
+        border-radius: 25px;
+        border: none;
+        outline: none;
+        font-size: 18px;
+        background: rgba(255, 255, 255, 0.2);
+        color: #fffdfd;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        transition: background 0.3s ease, transform 0.3s ease;
+      }
+
+      input[type="text"]:focus {
+        background: rgba(255, 255, 255, 0.4); /* Lighter background on focus */
+        transform: translateY(-2px); /* Gentle lift effect */
+      }
+      input[type="text"]::placeholder {
+    color: white; /* Set placeholder text color to white */
+    opacity: 1; /* Ensures the color applies fully */
+    padding-left:10px;
+}
+
+      /* Button with Magic Effect */
+      button {
+        background: linear-gradient(135deg, #62d2a2, #3498db);
+        color: #000000;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: background 0.3s ease, transform 0.3s ease;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+      }
+
+      button:hover {
+        background: linear-gradient(
+          135deg,
+          #3498db,
+          #62d2a2
+        ); /* Reverse colors on hover */
+        transform: translateY(-5px); /* Floating effect */
+      }
+
+      /* Style the video */
+      iframe {
+        border-radius: 15px;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        height: 500px;
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="heading">Hi Folks welcome!</h1>
+
+    <input type="text" id="videoUrl" placeholder="Paste YouTube URL" />
+    <button onclick="loadVideo()">Play Video</button>
+
+    <div id="videoContainer" style="display:none;">
+      <iframe id="videoFrame" src="" frameborder="0" allowfullscreen style="display:none;"></iframe>
+    </div>
+
+    <script>
+      function loadVideo() {
+        const urlInput = document.getElementById("videoUrl").value;
+        const videoFrame = document.getElementById("videoFrame");
+        const videoContainer = document.getElementById("videoContainer")
+
+        // Extract the video ID from the URL
+        if (urlInput.includes("youtube.com/watch?v=")) {
+          const videoId = urlInput.split("v=")[1].split("&")[0];
+          const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+
+          // Set the iframe src and make it visible
+          videoFrame.src = embedUrl;
+          videoFrame.style.display = "block";
+          videoContainer.style.display = "block";
+        } else {
+          // Hide iframe if the URL is invalid or empty
+          alert("Please check the link!")
+        }
+      }
+    </script>
+  </body>
+</html>
