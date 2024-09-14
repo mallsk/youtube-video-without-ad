@@ -1,144 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>YouTube-Play</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* MagicMix Theme */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Poppins", sans-serif; /* Modern, clean font */
-      }
-
-      body {
-        background: linear-gradient(
-          135deg,
-          #656669,
-          #110216
-        ); /* Magic gradient */
-        color: #f0f8ff; /* Light color for contrast */
-        min-height: 100vh;
-        padding: 20px;
-        transition: background 0.5s ease; /* Smooth transitions */
-      }
-      h1 {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-          sans-serif;
-        padding-left: 10px;
-        padding-top: 5px;
-      }
-
-      /* Container with Magic Glow */
-      #videoContainer {
-        background-color: rgba(255, 255, 255, 0.15); /* Semi-transparent box */
-        border-radius: 20px;
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        padding: 30px;
-        width: 80%;
-        max-width: 900px;
-        text-align: center;
-        transition: transform 0.3s ease;
-      }
-
-      #videoContainer:hover {
-        transform: scale(1.05); /* Slight zoom on hover */
-      }
-
-      /* Styling the Input Field */
-      input[type="text"] {
-        width: 40%;
-        height: 50px;
-        padding-left: 10px;
-        border-radius: 25px;
-        border: none;
-        outline: none;
-        font-size: 18px;
-        background: rgba(255, 255, 255, 0.2);
-        color: #fffdfd;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-        transition: background 0.3s ease, transform 0.3s ease;
-      }
-
-      input[type="text"]:focus {
-        background: rgba(255, 255, 255, 0.4); /* Lighter background on focus */
-        transform: translateY(-2px); /* Gentle lift effect */
-      }
-      input[type="text"]::placeholder {
-    color: white; /* Set placeholder text color to white */
-    opacity: 1; /* Ensures the color applies fully */
-    padding-left:10px;
-}
-
-      /* Button with Magic Effect */
-      button {
-        background: linear-gradient(135deg, #62d2a2, #3498db);
-        color: #000000;
-        padding: 15px 30px;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        font-size: 18px;
-        transition: background 0.3s ease, transform 0.3s ease;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-      }
-
-      button:hover {
-        background: linear-gradient(
-          135deg,
-          #3498db,
-          #62d2a2
-        ); /* Reverse colors on hover */
-        transform: translateY(-5px); /* Floating effect */
-      }
-
-      /* Style the video */
-      iframe {
-        border-radius: 15px;
-        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
-        width: 100%;
-        height: 500px;
-        border: none;
-      }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
     </style>
-  </head>
-  <body>
-    <h1 class="heading">Hi Folks welcome!</h1>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-900 to-purple-900 text-white p-8">
+    <h1 class="text-3xl font-bold mb-8">YouTube Player</h1>
+    
+    <div class="flex flex-col space-y-4 mb-8">
+        <input 
+            type="text" 
+            id="mainVideoUrl"
+            placeholder="Paste YouTube URL" 
+            class="bg-white/20 text-white placeholder-white/50 p-2 rounded-md"
+        >
+        <button onclick="loadVideo()" class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 p-2 rounded-md flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Play Video
+        </button>
+    </div>
 
-    <input type="text" id="videoUrl" placeholder="Paste YouTube URL" />
-    <button onclick="loadVideo()">Play Video</button>
+    <div class="flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8">
+        <div class="w-full lg:w-2/3 bg-white/10 backdrop-blur-lg rounded-lg p-6">
+            <div id="mainVideoContainer"></div>
+        </div>
 
-    <div id="videoContainer" style="display:none;">
-      <iframe id="videoFrame" src="" frameborder="0" allowfullscreen style="display:none;"></iframe>
+        <div class="w-full lg:w-1/3 bg-white/10 backdrop-blur-lg rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Playlist</h2>
+            <div class="flex flex-col space-y-4 mb-4">
+                <input 
+                    type="text" 
+                    id="newVideoUrl"
+                    placeholder="Add to playlist" 
+                    class="bg-white/20 text-white placeholder-white/50 p-2 rounded-md"
+                >
+                <button onclick="addVideo()" class="bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 p-2 rounded-md flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Add to Playlist
+                </button>
+            </div>
+            <div id="playlistContainer" class="space-y-4"></div>
+        </div>
     </div>
 
     <script>
-      function loadVideo() {
-        const urlInput = document.getElementById("videoUrl").value;
-        const videoFrame = document.getElementById("videoFrame");
-        const videoContainer = document.getElementById("videoContainer")
-
-        // Extract the video ID from the URL
-        if (urlInput.includes("youtube.com/watch?v=")) {
-          const videoId = urlInput.split("v=")[1].split("&")[0];
-          const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-
-          // Set the iframe src and make it visible
-          videoFrame.src = embedUrl;
-          videoFrame.style.display = "block";
-          videoContainer.style.display = "block";
-        } else {
-          // Hide iframe if the URL is invalid or empty
-          alert("Please check the link!")
+        function extractVideoId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
         }
-      }
+
+        function loadVideo(videoId) {
+            const mainVideoContainer = document.getElementById('mainVideoContainer');
+            if (!videoId) {
+                const mainVideoUrl = document.getElementById('mainVideoUrl').value;
+                videoId = extractVideoId(mainVideoUrl);
+            }
+
+            if (videoId) {
+                mainVideoContainer.innerHTML = `
+                    <iframe 
+                        src="https://www.youtube.com/embed/${videoId}" 
+                        class="w-full aspect-video rounded-lg shadow-lg" 
+                        allowFullScreen
+                    ></iframe>
+                `;
+            } else {
+                alert("Please enter a valid YouTube URL");
+            }
+        }
+
+        function addVideo() {
+            const newVideoUrl = document.getElementById('newVideoUrl').value;
+            const playlistContainer = document.getElementById('playlistContainer');
+            const videoId = extractVideoId(newVideoUrl);
+
+            if (videoId) {
+                const videoElement = document.createElement('div');
+                videoElement.className = 'flex items-center space-x-2 mb-4';
+                videoElement.innerHTML = `
+                    <img src="https://img.youtube.com/vi/${videoId}/default.jpg" alt="Video thumbnail" width="300px">
+                    <div class="flex-grow" style="padding:20px;">
+                        <button onclick="loadVideo('${videoId}')" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded mr-10">
+                            Play
+                        </button>
+                        <button onclick="deleteVideo(this)" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">
+                            Delete
+                        </button>
+                    </div>
+                `;
+                playlistContainer.appendChild(videoElement);
+                document.getElementById('newVideoUrl').value = '';
+            } else {
+                alert("Please enter a valid YouTube URL");
+            }
+        }
+
+        function deleteVideo(button) {
+            const videoElement = button.closest('div.flex');
+            videoElement.remove();
+        }
     </script>
-  </body>
+</body>
 </html>
